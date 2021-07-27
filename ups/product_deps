@@ -13,8 +13,8 @@ defaultqual	e20
 #
 product         version
 larevt          v09_02_08
-wirecell	v0_14_0i
-cetbuildtools	v8_10_01   -   only_for_build
+wirecell	v0_14_0j
+cetbuildtools	v8_11_02   -   only_for_build
 end_product_list
 
 qualifier	larevt          wirecell	notes
