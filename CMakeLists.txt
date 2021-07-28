@@ -14,8 +14,7 @@
 
 cmake_minimum_required (VERSION 3.12...3.18 FATAL_ERROR)
 
-project(larwirecell LANGUAGES CXX)
-set(larwirecell_CMAKE_PROJECT_VERSION_STRING v09_30_00_rc1)
+project(larwirecell VERSION 09.02.10.01 LANGUAGES CXX)
 
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
