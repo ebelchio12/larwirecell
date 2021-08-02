@@ -9,7 +9,8 @@
 parent larwirecell v09_02_10_01
 defaultqual	e20
 #
-#fcldir product_dir job
+# define fcldir so build tests can find these files
+fcldir product_dir fcl
 #
 product         version
 larevt          v09_02_08_01
