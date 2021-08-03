@@ -12,9 +12,9 @@ art_make_library(
     art::Framework_Core
     art::Framework_Principal
     art::Framework_Services_Registry
-    ${ART_PERSISTENCY_PROVENANCE}
-    ${ART_UTILITIES}
-    ${JSONCPP}
+    ART_PERSISTENCY_PROVENANCE
+    art::Utilities
+    JSONCPP
     ROOT::Core
     ${WIRECELL_LIBS}
     canvas::canvas

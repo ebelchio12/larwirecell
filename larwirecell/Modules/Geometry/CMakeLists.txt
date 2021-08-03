@@ -22,7 +22,6 @@ art_make( MODULE_LIBRARIES larcorealg_Geometry
                            fhiclcpp::fhiclcpp
                            cetlib::cetlib
                            cetlib_except::cetlib_except
-                           ${CLHEP}
                            ROOT::Geom
                            ROOT::XMLIO
                            ROOT::Gdml
