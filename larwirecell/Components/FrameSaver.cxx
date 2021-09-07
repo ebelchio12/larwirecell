@@ -47,6 +47,14 @@ FrameSaver::default_configuration() const
   // the input IFrame itself is sparse or not.
   cfg["sparse"] = true;
 
+  // Provide a configurable translation layer between WCT Plane View IDs
+  // and those from larsoft. Default is to assume they're the same, 
+  // except for in certain cases (such as the vertical drift geometry)
+  // where the map is provided in the jsonnet/json
+  cfg["plane_map"][std::to_string((int)WireCell::kUlayer)] = (int)geo::kU;
+  cfg["plane_map"][std::to_string((int)WireCell::kVlayer)] = (int)geo::kV;
+  cfg["plane_map"][std::to_string((int)WireCell::kWlayer)] = (int)geo::kW;
+
   // If digitize, raw::RawDigit has slots for pedestal mean and
   // sigma.  Legacy/obsolete code stuff unrelated values into these
   // slots.  If pedestal_mean is a number, it will be stuffed.  If
@@ -109,12 +117,23 @@ FrameSaver::configure(const WireCell::Configuration& cfg)
     // geo::kU, geo::kV, geo::kW
     auto wpid = anode->resolve(chid);
     geo::View_t view;
-    switch (wpid.layer()) {
-    case WireCell::kUlayer: view = geo::kU; break;
-    case WireCell::kVlayer: view = geo::kV; break;
-    case WireCell::kWlayer: view = geo::kW; break;
-    default: view = geo::kUnknown;
-    }
+    
+    // switch (wpid.layer()) {
+    // case WireCell::kUlayer: view = geo::kU; break;
+    // case WireCell::kVlayer: view = geo::kV; break;
+    // case WireCell::kWlayer: view = geo::kW; break;
+    // default: view = geo::kUnknown;
+    // }
+    
+    // Use configurable translation between WCT and larsoft 
+    // plane view IDs. Relevant especially for VD 3 view 
+    // since the 2nd induction plane is actually labelled
+    // kY in larsoft vs kV in WCT
+    std::string wct_layer = std::to_string((int)wpid.layer());
+    if (!cfg["plane_map"][wct_layer].isNull())
+      view = (geo::View_t) cfg["plane_map"][wct_layer];
+    else
+      view = geo::kUnknown;
     m_chview[chid] = view;
   }
 
