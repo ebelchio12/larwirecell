@@ -114,26 +114,19 @@ FrameSaver::configure(const WireCell::Configuration& cfg)
 
   WireCell::IAnodePlane::pointer anode = Factory::find_tn<IAnodePlane>(anode_tn);
   for (auto chid : anode->channels()) {
-    // geo::kU, geo::kV, geo::kW
+    
     auto wpid = anode->resolve(chid);
     geo::View_t view;
-    
-    // switch (wpid.layer()) {
-    // case WireCell::kUlayer: view = geo::kU; break;
-    // case WireCell::kVlayer: view = geo::kV; break;
-    // case WireCell::kWlayer: view = geo::kW; break;
-    // default: view = geo::kUnknown;
-    // }
     
     // Use configurable translation between WCT and larsoft 
     // plane view IDs. Relevant especially for VD 3 view 
     // since the 2nd induction plane is actually labelled
     // kY in larsoft vs kV in WCT
+    // Unless otherwise specified, this map amounts to
+    // kU->kU, kV->kV, kW->kW 
     std::string wct_layer = std::to_string((int)wpid.layer());
-    if (!cfg["plane_map"][wct_layer].isNull())
-      view = (geo::View_t) cfg["plane_map"][wct_layer];
-    else
-      view = geo::kUnknown;
+    view = (geo::View_t) cfg["plane_map"][wct_layer];
+    
     m_chview[chid] = view;
   }
 
