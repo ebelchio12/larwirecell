@@ -125,7 +125,7 @@ FrameSaver::configure(const WireCell::Configuration& cfg)
     // Unless otherwise specified, this map amounts to
     // kU->kU, kV->kV, kW->kW 
     std::string wct_layer = std::to_string((int)wpid.layer());
-    view = (geo::View_t) cfg["plane_map"][wct_layer];
+    view = (geo::View_t) (cfg["plane_map"][wct_layer].asInt());
     
     m_chview[chid] = view;
   }
