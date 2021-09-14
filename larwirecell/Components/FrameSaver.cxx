@@ -48,7 +48,7 @@ FrameSaver::default_configuration() const
   cfg["sparse"] = true;
 
   // Provide a configurable translation layer between WCT Plane View IDs
-  // and those from larsoft. Default is to assume they're the same, 
+  // and those from larsoft. Default is to assume they're the same,
   // except for in certain cases (such as the vertical drift geometry)
   // where the map is provided in the jsonnet/json
   cfg["plane_map"][std::to_string((int)WireCell::kUlayer)] = (int)geo::kU;
@@ -114,19 +114,19 @@ FrameSaver::configure(const WireCell::Configuration& cfg)
 
   WireCell::IAnodePlane::pointer anode = Factory::find_tn<IAnodePlane>(anode_tn);
   for (auto chid : anode->channels()) {
-    
+
     auto wpid = anode->resolve(chid);
     geo::View_t view;
-    
-    // Use configurable translation between WCT and larsoft 
-    // plane view IDs. Relevant especially for VD 3 view 
+
+    // Use configurable translation between WCT and larsoft
+    // plane view IDs. Relevant especially for VD 3 view
     // since the 2nd induction plane is actually labelled
     // kY in larsoft vs kV in WCT
     // Unless otherwise specified, this map amounts to
-    // kU->kU, kV->kV, kW->kW 
+    // kU->kU, kV->kV, kW->kW
     std::string wct_layer = std::to_string((int)wpid.layer());
     view = (geo::View_t) (cfg["plane_map"][wct_layer].asInt());
-    
+
     m_chview[chid] = view;
   }
 
