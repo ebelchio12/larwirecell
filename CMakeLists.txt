@@ -46,7 +46,7 @@ find_ups_product( art )
 find_ups_product(art_root_io)
 
 find_ups_product( jsoncpp )
-find_ups_product( jsonnet )
+find_ups_product( gojsonnet )
 find_ups_product( eigen )
 find_ups_product( spdlog )
 find_ups_product( wirecell )
