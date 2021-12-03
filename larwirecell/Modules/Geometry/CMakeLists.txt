@@ -10,22 +10,19 @@ art_make( MODULE_LIBRARIES larcorealg_Geometry
                            art::Framework_Core
                            art::Framework_Principal
                            art::Framework_Services_Registry
-                           ${ART_FRAMEWORK_SERVICES_OPTIONAL}
-                           ${ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE}
-                           ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
+                           art::Framework_Services_Optional
+                           art::Framework_Services_Optional_RandomNumberGenerator_service
                            art::Persistency_Common
                            art::Persistency_Provenance
                            art::Utilities
                            canvas::canvas
                            messagefacility::MF_MessageLogger
-                           ${MF_UTILITIES}
                            fhiclcpp::fhiclcpp
                            cetlib::cetlib
                            cetlib_except::cetlib_except
                            ROOT::Geom
                            ROOT::XMLIO
                            ROOT::Gdml
-                           ${ROOT_BASIC_LIB_LIST}
         )
 
 #install_headers()
