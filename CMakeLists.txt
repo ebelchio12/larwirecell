@@ -19,8 +19,6 @@ project(larwirecell VERSION 09.04.06 LANGUAGES CXX)
 # cetbuildtools contains our cmake modules
 find_package(cetbuildtools REQUIRED)
 
-list(APPEND CMAKE_MODULE_PATH $ENV{CANVAS_ROOT_IO_DIR}/Modules $ENV{ART_DIR}/Modules)
-
 include(CetCMakeEnv)
 cet_cmake_env()
 
@@ -34,7 +32,12 @@ cet_set_compiler_flags(DIAGS CAUTIOUS
 
 cet_report_compiler_flags()
 
-# these are minimum required versions, not the actual product versions
+find_package(canvas_root_io REQUIRED)
+find_package(art REQUIRED PUBLIC)
+find_package(art_root_io REQUIRED PUBLIC)
+find_package (Eigen3 3.3...3.3.9 REQUIRED NO_MODULE)
+find_package(ROOT COMPONENTS Core Geom XMLIO Gdml REQUIRED PUBLIC)
+
 find_ups_product( larcore )
 find_ups_product( lardata )
 find_ups_product( larevt )
@@ -42,12 +45,9 @@ find_ups_product( lardataobj )
 find_ups_product( lardataalg )
 find_ups_product( larcoreobj )
 find_ups_product( larcorealg )
-find_ups_product( art )
-find_ups_product(art_root_io)
 
 find_ups_product( jsoncpp )
 find_ups_product( gojsonnet )
-find_ups_product( eigen )
 find_ups_product( spdlog )
 find_ups_product( wirecell )
 
