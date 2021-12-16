@@ -13,14 +13,12 @@
 
 namespace wcls {
 
-    namespace bits {
-        class DepoAdapter;
-    }
-
     class SimDepoSetSource :  public IArtEventVisitor,
                            public WireCell::IDepoSetSource,
                            public WireCell::IConfigurable {
     public:
+        class DepoAdapter;
+
         SimDepoSetSource();
         virtual ~SimDepoSetSource();
 
@@ -41,7 +39,7 @@ namespace wcls {
         // Temporary holding of accepted depos.
         WireCell::IDepo::vector m_depos;
 
-        bits::DepoAdapter* m_adapter;
+        DepoAdapter* m_adapter;
 
         art::InputTag m_inputTag;
         art::InputTag m_assnTag; // associated input

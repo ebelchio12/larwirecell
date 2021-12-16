@@ -23,19 +23,20 @@ WIRECELL_FACTORY(wclsSimDepoSetSource, wcls::SimDepoSetSource, wcls::IArtEventVi
 namespace units = WireCell::units;
 
 namespace wcls {
-    namespace bits {
 
-        // There is more than one way to make ionization electrons.
-        // These adapters erase these differences.
-        class DepoAdapter {
-        public:
-            virtual ~DepoAdapter() {}
-            virtual double operator()(const sim::SimEnergyDeposit& sed) const = 0;
-        };
+    // There is more than one way to make ionization electrons.
+    // These adapters erase these differences.
+    class SimDepoSetSource::DepoAdapter {
+    public:
+        virtual ~DepoAdapter() {}
+        virtual double operator()(const sim::SimEnergyDeposit& sed) const = 0;
+    };
+
+    namespace bits {
 
         // This takes number of electrons directly, and applies a
         // multiplicative scale.
-        class ElectronsAdapter : public DepoAdapter {
+        class ElectronsAdapter : public SimDepoSetSource::DepoAdapter {
             double m_scale;
         public:
             ElectronsAdapter(double scale=1.0) : m_scale(scale) {}
@@ -47,7 +48,7 @@ namespace wcls {
 
         // This one takes a recombination model which only requires dE
         // (ie, assumes MIP).
-        class PointAdapter : public DepoAdapter {
+        class PointAdapter : public SimDepoSetSource::DepoAdapter {
             WireCell::IRecombinationModel::pointer m_model;
             double m_scale;
         public:
@@ -61,7 +62,7 @@ namespace wcls {
         };
 
         // This one takes a recombination which is a function of both dE and dX.
-        class StepAdapter : public DepoAdapter {
+        class StepAdapter : public SimDepoSetSource::DepoAdapter {
             WireCell::IRecombinationModel::pointer m_model;
             double m_scale;
         public:
