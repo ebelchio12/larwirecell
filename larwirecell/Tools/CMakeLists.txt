@@ -1,1 +1,1 @@
-simple_plugin(WCLS "tool" ${WIRECELL_LIBS})
+simple_plugin(WCLS "tool" ${WIRECELL_LIBS} dl)

@@ -14,6 +14,7 @@ art_make(
     ${ART_ROOT_IO_TFILESERVICE_SERVICE}
     ${WIRECELL_LIBS}
     ${ROOT_CORE}
+    dl
 )
 
 install_headers()
