@@ -262,8 +262,8 @@ namespace noisefilteralg {
     }
     // WireCell::Waveform::compseq_t u_resp_freq = WireCell::Waveform::dft(u_resp);
     // WireCell::Waveform::compseq_t v_resp_freq = WireCell::Waveform::dft(v_resp);
-    WireCell::Waveform::compseq_t u_resp_freq = Aux::fwd(m_dft, Waveform::complex(u_resp));
-    WireCell::Waveform::compseq_t v_resp_freq = Aux::fwd(m_dft, Waveform::complex(v_resp));
+    WireCell::Waveform::compseq_t u_resp_freq = Aux::fwd_r2c(m_dft, u_resp);
+    WireCell::Waveform::compseq_t v_resp_freq = Aux::fwd_r2c(m_dft, v_resp);
 
     int uplane_time_shift = 79;
     int vplane_time_shift = 82;
