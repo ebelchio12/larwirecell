@@ -1,28 +1,47 @@
 # Build the libWireCellLarsoft WCT plugin library.
 # See README for some details.
 
+
 file(GLOB wcls_components_sources "*.cxx")
 
 # This is what's needed for building he WireCellLarsoft WCT component
 # plugin library.
-art_make_library(
-  LIBRARY_NAME WireCellLarsoft
-  SOURCE ${wcls_components_sources}
+art_make_library(LIBRARY_NAME WireCellLarsoft
+  SOURCE
+  ChannelNoiseDB.cxx
+  FrameSaver.cxx
+	SimChannelSink.cxx
+  ChannelSelectorDB.cxx
+  LazyFrameSource.cxx
+	SimDepoSetSource.cxx
+  CookedFrameSink.cxx
+  MultiChannelNoiseDB.cxx
+	SimDepoSource.cxx
+  CookedFrameSource.cxx
+  RawFrameSource.cxx
   LIBRARIES
-    art::Framework_Core
-    art::Framework_Principal
-    art::Framework_Services_Registry
-    ART_PERSISTENCY_PROVENANCE
-    art::Utilities
-    JSONCPP
-    ROOT::Core
-    ${WIRECELL_LIBS}
-    canvas::canvas
-    cetlib_except::cetlib_except
-    larcorealg_Geometry
-    lardataalg_DetectorInfo
-    lardataobj_RawData
-    lardataobj_RecoBase
-    lardataobj_Simulation
-    larevt_CalibrationDBI_IOVData
+  PUBLIC
+  larwirecell::IArtEventVisitor
+  larcoreobj::headers
+  canvas::canvas
+  WireCell::SigProc
+  WireCell::Iface
+  WireCell::Util
+  lardataobj::Simulation
+  PRIVATE
+  larevt::CalibrationDBI_IOVData
+  larevt::ChannelStatusService
+  larevt::ChannelStatusProvider
+  larevt::DetPedestalService
+  larevt::DetPedestalProvider
+  larevt::ElectronicsCalibService
+  larevt::ElectronicsCalibProvider
+  lardata::DetectorPropertiesService
+  larcore::Geometry_Geometry_service
+  lardataobj::RecoBase
+  lardataobj::RawData
+  art::Framework_Core
+  art::Framework_Principal
+  WireCell::Gen
+  ROOT::Core
 )
