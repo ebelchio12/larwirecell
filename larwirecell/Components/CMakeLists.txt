@@ -25,4 +25,5 @@ art_make_library(
     lardataobj_RecoBase
     lardataobj_Simulation
     larevt_CalibrationDBI_IOVData
+    ${CMAKE_DL_LIBS}
 )

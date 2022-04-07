@@ -14,6 +14,7 @@ art_make(
     art_root_io::TFileService_service
     ${WIRECELL_LIBS}
     ROOT::Core
+    ${CMAKE_DL_LIBS}
 )
 
 install_headers()
