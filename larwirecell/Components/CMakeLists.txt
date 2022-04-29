@@ -1,12 +1,9 @@
 # Build the libWireCellLarsoft WCT plugin library.
 # See README for some details.
 
-
-file(GLOB wcls_components_sources "*.cxx")
-
-# This is what's needed for building he WireCellLarsoft WCT component
+# This is what's needed for building the WireCellLarsoft WCT component
 # plugin library.
-art_make_library(LIBRARY_NAME WireCellLarsoft
+cet_make_library(LIBRARY_NAME WireCellLarsoft
   SOURCE
   ChannelNoiseDB.cxx
   ChannelSelectorDB.cxx
