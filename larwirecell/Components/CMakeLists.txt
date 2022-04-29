@@ -35,6 +35,7 @@ cet_make_library(LIBRARY_NAME WireCellLarsoft
   larevt::ElectronicsCalibProvider
   lardata::DetectorPropertiesService
   larcore::Geometry_Geometry_service
+  larcore::ServiceUtil
   lardataobj::RecoBase
   lardataobj::RawData
   art::Framework_Core

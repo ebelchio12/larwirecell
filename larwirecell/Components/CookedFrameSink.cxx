@@ -2,6 +2,7 @@
 //#include "art/Framework/Principal/Handle.h"
 
 #include "lardataobj/RecoBase/Wire.h"
+#include "larcore/CoreUtils/ServiceUtil.h"
 #include "larcore/Geometry/Geometry.h"
 
 #include "art/Framework/Principal/Event.h"
