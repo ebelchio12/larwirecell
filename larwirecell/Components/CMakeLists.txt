@@ -9,16 +9,16 @@ file(GLOB wcls_components_sources "*.cxx")
 art_make_library(LIBRARY_NAME WireCellLarsoft
   SOURCE
   ChannelNoiseDB.cxx
-  FrameSaver.cxx
-	SimChannelSink.cxx
   ChannelSelectorDB.cxx
-  LazyFrameSource.cxx
-	SimDepoSetSource.cxx
   CookedFrameSink.cxx
-  MultiChannelNoiseDB.cxx
-	SimDepoSource.cxx
   CookedFrameSource.cxx
+  FrameSaver.cxx
+  LazyFrameSource.cxx
+  MultiChannelNoiseDB.cxx
   RawFrameSource.cxx
+  SimChannelSink.cxx
+  SimDepoSetSource.cxx
+  SimDepoSource.cxx
   LIBRARIES
   PUBLIC
   larwirecell::IArtEventVisitor
