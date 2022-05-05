@@ -21,8 +21,8 @@ set(_fwc_transitive_deps_Sio WireCell::Aux WireCell::Iface WireCell::Util Boost:
 set(_fwc_transitive_deps_Tbb WireCell::Iface WireCell::Util Boost::headers TBB::TBB)
 set(_fwc_transitive_deps_Util Boost::date_time Boost::exception Boost::filesystem Boost::iostreams Boost::stacktrace_basic Eigen3::Eigen jsoncpp_lib jsonnet_lib spdlog::spdlog ${CMAKE_DL_LIBS})
 set(_fwc_deps Boost Eigen3 jsoncpp jsonnet ROOT spdlog TBB)
-set(_fwc_fp_Boost_args COMPONENTS graph headers date_time exception filesystem iostreams stacktrace_basic EXPORT)
-set(_fwc_fp_ROOT_args COMPONENTS Core Hist RIO Tree EXPORT)
+set(_fwc_fp_Boost_args COMPONENTS graph headers date_time exception filesystem iostreams stacktrace_basic)
+set(_fwc_fp_ROOT_args COMPONENTS Core Hist RIO Tree)
 
 unset(_fwc_fphsa_extra_args)
 if (WIRE-CELL)
