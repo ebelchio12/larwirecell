@@ -250,7 +250,6 @@ void SimDepoSetSource::visit(art::Event & event)
     std::cerr << "SimDepoSetSource: ready with " << m_depos.size() << " depos spanning: ["
               << m_depos.front()->time()/units::us << ", "
               << m_depos.back()->time()/units::us << "]us\n";
-    m_depos.push_back(nullptr); // EOS marker
 }
 
 bool SimDepoSetSource::operator()(WireCell::IDepoSet::pointer& out)
@@ -260,6 +259,7 @@ bool SimDepoSetSource::operator()(WireCell::IDepoSet::pointer& out)
     }
 
     out = std::make_shared<WireCell::SimpleDepoSet>(m_count, m_depos);
+    m_depos.clear();
     ++m_count;
 
     return true;
