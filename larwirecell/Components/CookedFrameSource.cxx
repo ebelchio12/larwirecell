@@ -6,8 +6,8 @@
 
 #include "TTimeStamp.h"
 
-#include "WireCellIface/SimpleFrame.h"
-#include "WireCellIface/SimpleTrace.h"
+#include "WireCellAux/SimpleFrame.h"
+#include "WireCellAux/SimpleTrace.h"
 #include "WireCellUtil/NamedFactory.h"
 
 WIRECELL_FACTORY(wclsCookedFrameSource,
@@ -17,6 +17,8 @@ WIRECELL_FACTORY(wclsCookedFrameSource,
 
 using namespace wcls;
 using namespace WireCell;
+using WireCell::Aux::SimpleTrace;
+using WireCell::Aux::SimpleFrame;
 
 CookedFrameSource::CookedFrameSource() : m_nticks(0) {}
 
@@ -121,7 +123,7 @@ CookedFrameSource::visit(art::Event& e)
   }
 
   const double time = tdiff(event.getRun().beginTime(), event.time());
-  auto sframe = new WireCell::SimpleFrame(event.event(), time, traces, tick);
+  auto sframe = new SimpleFrame(event.event(), time, traces, tick);
   for (auto tag : m_frame_tags) {
     //std::cerr << "\ttagged: " << tag << std::endl;
     sframe->tag_frame(tag);
