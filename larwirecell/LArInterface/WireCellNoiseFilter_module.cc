@@ -162,8 +162,9 @@ namespace noisefilteralg {
     const size_t windowSize = std::min(fWindowSize, nsamples);
 
     // Q&D microboone channel map
-    std::vector<int> uchans(geometry.Nwires(0)), vchans(geometry.Nwires(1)),
-      wchans(geometry.Nwires(2));
+    geo::TPCID const tpcid{0, 0};
+    std::vector<int> uchans(geometry.Nwires({tpcid, 0})), vchans(geometry.Nwires({tpcid, 1})),
+      wchans(geometry.Nwires({tpcid, 2}));
     const int nchans = uchans.size() + vchans.size() + wchans.size();
     std::iota(uchans.begin(), uchans.end(), 0);
     std::iota(vchans.begin(), vchans.end(), vchans.size());
