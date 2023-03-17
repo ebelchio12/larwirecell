@@ -5,17 +5,22 @@
 #
 # CMake instructions for larsoft service interface classes.
 
-art_make(
-  MODULE_LIBRARIES
-    lardataobj_RawData
-    larevt_CalibrationDBI_IOVData
-    larcorealg_Geometry
-    ${ART_FRAMEWORK_SERVICES_REGISTRY}
-    ${ART_ROOT_IO_TFILESERVICE_SERVICE}
-    ${WIRECELL_LIBS}
-    ROOT::Core
-    dl
-)
+cet_build_plugin(WireCellNoiseFilter art::EDProducer
+  LIBRARIES PRIVATE
+  larcore::Geometry_Geometry_service
+  lardata::DetectorClocksService
+  lardata::DetectorPropertiesService
+  larevt::ChannelStatusService
+  larevt::ChannelStatusProvider
+  larevt::DetPedestalService
+  larevt::DetPedestalProvider
+  larevt::ElectronicsCalibService
+  larevt::ElectronicsCalibProvider
+  lardataobj::RawData
+  art::Framework_Principal
+  WireCell::Iface
+  WireCell::SigProc
+  )
 
 install_headers()
 install_fhicl()

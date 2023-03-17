@@ -1,34 +1,14 @@
-#add_subdirectory(tools)
+cet_build_plugin(CTreeGeometry art::EDAnalyzer
+  LIBRARIES PRIVATE
+  lardata::Utilities
+  lardataobj::Simulation
+  lardataobj::RecoBase
+  larcore::Geometry_Geometry_service
+  larcorealg::Geometry
+  lardata::DetectorPropertiesService
+  lardata::DetectorClocksService
+  art::Framework_Principal
+  canvas::canvas
+  )
 
-art_make( MODULE_LIBRARIES larcorealg_Geometry
-                           larcore_Geometry_Geometry_service
-                           lardataobj_Simulation
-                           lardata_Utilities
-                           larevt_Filters
-                           lardataobj_RawData
-                           larevt_CalibrationDBI_Providers
-                           ${ART_FRAMEWORK_CORE}
-                           ${ART_FRAMEWORK_PRINCIPAL}
-                           ${ART_FRAMEWORK_SERVICES_REGISTRY}
-                           ${ART_FRAMEWORK_SERVICES_OPTIONAL}
-                           ${ART_FRAMEWORK_SERVICES_OPTIONAL_RANDOMNUMBERGENERATOR_SERVICE}
-                           ${ART_FRAMEWORK_SERVICES_OPTIONAL_TFILESERVICE_SERVICE}
-                           art_Persistency_Common
-                           art_Persistency_Provenance
-                           art_Utilities
-                           canvas
-                           ${MF_MESSAGELOGGER}
-                           ${MF_UTILITIES}
-                           ${FHICLCPP}
-                           ${CETLIB}
-                           cetlib_except
-                           ${CLHEP}
-                           ${ROOT_GEOM}
-                           ${ROOT_XMLIO}
-                           ${ROOT_GDML}
-                           ${ROOT_BASIC_LIB_LIST}
-        )
-
-#install_headers()
-# install_fhicl()
 install_source()

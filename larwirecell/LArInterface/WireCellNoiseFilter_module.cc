@@ -18,22 +18,22 @@
 
 #include "lardataobj/RawData/RawDigit.h"
 
-#include "WireCellUtil/Units.h"
-#include "WireCellUtil/NamedFactory.h"
-#include "WireCellIface/IDFT.h"
+#include "WireCellAux/DftTools.h"
 #include "WireCellAux/SimpleFrame.h"
 #include "WireCellAux/SimpleTrace.h"
-#include "WireCellAux/DftTools.h"
+#include "WireCellIface/IDFT.h"
 #include "WireCellSigProc/Microboone.h"
 #include "WireCellSigProc/OmnibusNoiseFilter.h"
 #include "WireCellSigProc/SimpleChannelNoiseDB.h"
+#include "WireCellUtil/NamedFactory.h"
+#include "WireCellUtil/Units.h"
 
 #include <numeric> // iota
 #include <string>
 
 using namespace WireCell;
-using WireCell::Aux::SimpleTrace;
 using WireCell::Aux::SimpleFrame;
+using WireCell::Aux::SimpleTrace;
 using WireCell::Aux::DftTools::fwd_r2c;
 
 namespace noisefilteralg {
@@ -74,8 +74,7 @@ namespace noisefilteralg {
   WireCellNoiseFilter::~WireCellNoiseFilter() {}
 
   //-------------------------------------------------------------------
-  void
-  WireCellNoiseFilter::reconfigure(fhicl::ParameterSet const& pset)
+  void WireCellNoiseFilter::reconfigure(fhicl::ParameterSet const& pset)
   {
     auto dft_tn = pset.get<std::string>("dft", "FftwDFT");
     m_dft = Factory::find_tn<IDFT>(dft_tn);
@@ -86,8 +85,7 @@ namespace noisefilteralg {
   }
 
   //-------------------------------------------------------------------
-  void
-  WireCellNoiseFilter::produce(art::Event& evt)
+  void WireCellNoiseFilter::produce(art::Event& evt)
   {
     // Recover services we will need
     const lariov::DetPedestalProvider& pedestalValues =
@@ -140,10 +138,9 @@ namespace noisefilteralg {
     evt.put(std::move(filteredRawDigit));
   }
 
-  void
-  WireCellNoiseFilter::DoNoiseFilter(art::Event const& e,
-                                     const std::vector<raw::RawDigit>& inputWaveforms,
-                                     std::vector<raw::RawDigit>& outputWaveforms) const
+  void WireCellNoiseFilter::DoNoiseFilter(art::Event const& e,
+                                          const std::vector<raw::RawDigit>& inputWaveforms,
+                                          std::vector<raw::RawDigit>& outputWaveforms) const
   {
     auto const runNum = e.run();
 
@@ -155,8 +152,7 @@ namespace noisefilteralg {
     const lariov::ElectronicsCalibProvider& elec_provider =
       art::ServiceHandle<lariov::ElectronicsCalibService const>()->GetProvider();
     const geo::GeometryCore& geometry = *lar::providerFrom<geo::Geometry>();
-    auto const clock_data =
-      art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(e);
+    auto const clock_data = art::ServiceHandle<detinfo::DetectorClocksService const>()->DataFor(e);
 
     const unsigned int n_channels = inputWaveforms.size();
 
@@ -166,8 +162,9 @@ namespace noisefilteralg {
     const size_t windowSize = std::min(fWindowSize, nsamples);
 
     // Q&D microboone channel map
-    std::vector<int> uchans(geometry.Nwires(0)), vchans(geometry.Nwires(1)),
-      wchans(geometry.Nwires(2));
+    geo::TPCID const tpcid{0, 0};
+    std::vector<int> uchans(geometry.Nwires({tpcid, 0})), vchans(geometry.Nwires({tpcid, 1})),
+      wchans(geometry.Nwires({tpcid, 2}));
     const int nchans = uchans.size() + vchans.size() + wchans.size();
     std::iota(uchans.begin(), uchans.end(), 0);
     std::iota(vchans.begin(), vchans.end(), vchans.size());
