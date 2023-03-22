@@ -20,8 +20,6 @@ namespace wcls {
                                 public WireCell::IConfigurable {
 
   public:
-    DepoSetSimChannelSink();
-    // virtual ~DepoSetSimChannelSink();
 
     /// IArtEventVisitor
     virtual void produces(art::ProducesCollector& collector);
@@ -60,12 +58,6 @@ namespace wcls {
     double m_g4_ref_time;
     bool m_use_energy;
     bool m_use_extra_sigma; // extra smearing from signal processing
-
-    // double Pi = 3.141592653589;
-    // WireCell::Pimpos *uboone_u;
-    // WireCell::Pimpos *uboone_v;
-    // WireCell::Pimpos *uboone_y;
-    // //WireCell::Pimpos *pimpos; // unused
   };
 }
 

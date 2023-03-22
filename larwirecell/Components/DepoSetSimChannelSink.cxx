@@ -16,12 +16,6 @@ WIRECELL_FACTORY(wclsDepoSetSimChannelSink,
 using namespace wcls;
 using namespace WireCell;
 
-DepoSetSimChannelSink::DepoSetSimChannelSink()
-//   : m_depo(nullptr)
-{
-  m_mapSC.clear();
-}
-
 WireCell::Configuration DepoSetSimChannelSink::default_configuration() const
 {
   Configuration cfg;
@@ -63,11 +57,9 @@ void DepoSetSimChannelSink::configure(const WireCell::Configuration& cfg)
   //  calling map::clear()
   for (auto& anode : m_anodes) {
     for (auto& channel : anode->channels()) {
-      // std::cout << "-> channel: " << channel << std::endl;
-      m_mapSC.emplace(channel, sim::SimChannel(channel));
+      m_mapSC.try_emplace(channel, sim::SimChannel(channel));
     }
   }
-  // std::cout << "m_mapSC.size(): " << m_mapSC.size() << std::endl;
 
   if (m_anodes.empty()) {
     const std::string anode_tn = cfg["anode"].asString();
@@ -133,14 +125,11 @@ void DepoSetSimChannelSink::save_as_simchannel(const WireCell::IDepo::pointer& d
   int ctr = 0;
   while (ctr < 1) {
     ctr++;
-    //      if(ctr % 10000==0){ std::cout<<"COUNTER "<<ctr<<std::endl;}
     for (auto anode : m_anodes) {
       for (auto face : anode->faces()) {
         auto boundbox = face->sensitive();
         if (!boundbox.inside(depo->pos())) continue;
 
-        // int plane = -1;
-        // for(Pimpos* pimpos : {uboone_u, uboone_v, uboone_y}){
         for (auto plane : face->planes()) {
           // plane++;
           int iplane = plane->planeid().index();
@@ -161,7 +150,6 @@ void DepoSetSimChannelSink::save_as_simchannel(const WireCell::IDepo::pointer& d
               sqrt(pow(depo->extent_long(), 2) + pow(add_sigma_L, 2)); // / time_slice_width;
           }
           Gen::GausDesc time_desc(center_time, sigma_L / m_drift_speed);
-          // Gen::GausDesc time_desc(center_time, depo->extent_long() / m_drift_speed);
           {
             double nmin_sigma = time_desc.distance(tbins.min());
             double nmax_sigma = time_desc.distance(tbins.max());
@@ -170,7 +158,6 @@ void DepoSetSimChannelSink::save_as_simchannel(const WireCell::IDepo::pointer& d
             if (nmin_sigma > eff_nsigma || nmax_sigma < -eff_nsigma) { break; }
           }
 
-          // auto ibins = pimpos->impact_binning();
           auto wbins = pimpos->region_binning(); // wire binning
 
           double sigma_T = depo->extent_tran();
@@ -185,7 +172,6 @@ void DepoSetSimChannelSink::save_as_simchannel(const WireCell::IDepo::pointer& d
             sigma_T = sqrt(pow(depo->extent_tran(), 2) + pow(add_sigma_T, 2)); // / wbins.binsize();
           }
           Gen::GausDesc pitch_desc(center_pitch, sigma_T);
-          // Gen::GausDesc pitch_desc(center_pitch, depo->extent_tran());
           {
             double nmin_sigma = pitch_desc.distance(wbins.min());
             double nmax_sigma = pitch_desc.distance(wbins.max());
@@ -224,9 +210,6 @@ void DepoSetSimChannelSink::save_as_simchannel(const WireCell::IDepo::pointer& d
 
             auto iwire = wires[abs_pbin];
             int channel = iwire->channel();
-            // int channel = abs_pbin;
-            // if(plane == 1){ channel = abs_pbin+2400; }
-            // if(plane == 2){ channel = abs_pbin+4800; }
 
             auto channelData = m_mapSC.find(channel);
             sim::SimChannel& sc = (channelData == m_mapSC.end()) ?
@@ -238,20 +221,15 @@ void DepoSetSimChannelSink::save_as_simchannel(const WireCell::IDepo::pointer& d
               double charge = patch(pbin, tbin);
               double tdc = tbins.center(abs_tbin);
 
-              // double wire_response_offset = iwire->center().x() - pimpos->origin().x();
               if (iplane == 0) {
                 tdc = tdc + (m_u_to_rp / m_drift_speed) + m_u_time_offset;
-                // xyz[0] = depo->pos().x()/units::cm - 94*units::mm/units::cm; // m_u_to_rp/units::cm;
               }
               if (iplane == 1) {
                 tdc = tdc + (m_v_to_rp / m_drift_speed) + m_v_time_offset;
-                // xyz[0] = depo->pos().x()/units::cm - 97*units::mm/units::cm; // m_v_to_rp/units::cm;
               }
               if (iplane == 2) {
                 tdc = tdc + (m_y_to_rp / m_drift_speed) + m_y_time_offset;
-                // xyz[0] = depo->pos().x()/units::cm - 100*units::mm/units::cm; // m_y_to_rp/units::cm;
               }
-              // xyz[0] = depo->pos().x()/units::cm + wire_response_offset/units::cm;
               WireCell::IDepo::pointer orig = depo_chain(depo).back(); // first depo in the chain
               xyz[0] = orig->pos().x() / units::cm;
               xyz[1] = orig->pos().y() / units::cm;
@@ -280,7 +258,6 @@ void DepoSetSimChannelSink::visit(art::Event& event)
   }
 
   event.put(std::move(out), m_artlabel);
-  // m_mapSC.clear();
   for (auto& elem : m_mapSC) {
     elem.second = sim::SimChannel(elem.first);
   }
@@ -293,7 +270,6 @@ bool DepoSetSimChannelSink::operator()(const WireCell::IDepoSet::pointer& indepo
 
   for (const auto indepo : *(indepos->depos())) {
     if (indepo) {
-      // m_depo = indepo;
       save_as_simchannel(indepo);
     }
   }
