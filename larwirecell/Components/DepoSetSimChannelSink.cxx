@@ -221,15 +221,9 @@ void DepoSetSimChannelSink::save_as_simchannel(const WireCell::IDepo::pointer& d
               double charge = patch(pbin, tbin);
               double tdc = tbins.center(abs_tbin);
 
-              if (iplane == 0) {
-                tdc = tdc + (m_u_to_rp / m_drift_speed) + m_u_time_offset;
-              }
-              if (iplane == 1) {
-                tdc = tdc + (m_v_to_rp / m_drift_speed) + m_v_time_offset;
-              }
-              if (iplane == 2) {
-                tdc = tdc + (m_y_to_rp / m_drift_speed) + m_y_time_offset;
-              }
+              if (iplane == 0) { tdc = tdc + (m_u_to_rp / m_drift_speed) + m_u_time_offset; }
+              if (iplane == 1) { tdc = tdc + (m_v_to_rp / m_drift_speed) + m_v_time_offset; }
+              if (iplane == 2) { tdc = tdc + (m_y_to_rp / m_drift_speed) + m_y_time_offset; }
               WireCell::IDepo::pointer orig = depo_chain(depo).back(); // first depo in the chain
               xyz[0] = orig->pos().x() / units::cm;
               xyz[1] = orig->pos().y() / units::cm;
@@ -269,9 +263,7 @@ bool DepoSetSimChannelSink::operator()(const WireCell::IDepoSet::pointer& indepo
   outdepos = indepos;
 
   for (const auto indepo : *(indepos->depos())) {
-    if (indepo) {
-      save_as_simchannel(indepo);
-    }
+    if (indepo) { save_as_simchannel(indepo); }
   }
 
   return true;

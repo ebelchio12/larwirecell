@@ -20,7 +20,6 @@ namespace wcls {
                                 public WireCell::IConfigurable {
 
   public:
-
     /// IArtEventVisitor
     virtual void produces(art::ProducesCollector& collector);
     virtual void visit(art::Event& event);
