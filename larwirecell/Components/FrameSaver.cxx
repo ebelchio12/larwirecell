@@ -46,6 +46,10 @@ WireCell::Configuration FrameSaver::default_configuration() const
   // the input IFrame itself is sparse or not.
   cfg["sparse"] = true;
 
+  // if FALSE (DEFAULT BEHAVIOUR) continue saving RawDigit frame
+  // if true, save an empty frame (RawDigit), used for saving CMM only
+  cfg["skip_frame"] = false;
+
   // Provide a configurable translation layer between WCT Plane View IDs
   // and those from larsoft. Default is to assume they're the same,
   // except for in certain cases (such as the vertical drift geometry)
@@ -128,6 +132,7 @@ void FrameSaver::configure(const WireCell::Configuration& cfg)
 
   m_digitize = get(cfg, "digitize", false);
   m_sparse = get(cfg, "sparse", true);
+  m_skipframe = get(cfg, "skip_frame", false);
 
   m_cmms = cfg["chanmaskmaps"];
 
@@ -192,11 +197,11 @@ void FrameSaver::configure(const WireCell::Configuration& cfg)
 void FrameSaver::produces(art::ProducesCollector& collector)
 {
   for (auto tag : m_frame_tags) {
-    if (!m_digitize) {
+    if (!m_digitize && !m_skipframe) {
       std::cerr << "wclsFrameSaver: promising to produce recob::Wires named \"" << tag << "\"\n";
       collector.produces<std::vector<recob::Wire>>(tag);
     }
-    else {
+    else if (!m_skipframe) {
       std::cerr << "wclsFrameSaver: promising to produce raw::RawDigits named \"" << tag << "\"\n";
       collector.produces<std::vector<raw::RawDigit>>(tag);
     }
@@ -476,14 +481,15 @@ void FrameSaver::save_cmms(art::Event& event)
     auto it = cmm.find(name);
     if (it == cmm.end()) {
       std::cerr << "wclsFrameSaver: failed to find requested channel masks \"" << name << "\"\n";
-      continue;
     }
-    for (auto cmit : it->second) { // int->vec<pair<int,int>>
-      out_list->push_back(cmit.first);
-      for (auto be : cmit.second) {
-        out_masks->push_back(cmit.first);
-        out_masks->push_back(be.first);
-        out_masks->push_back(be.second);
+    else {
+      for (auto cmit : it->second) { // int->vec<pair<int,int>>
+        out_list->push_back(cmit.first);
+        for (auto be : cmit.second) {
+          out_masks->push_back(cmit.first);
+          out_masks->push_back(be.first);
+          out_masks->push_back(be.second);
+        }
       }
     }
 
@@ -532,10 +538,8 @@ void FrameSaver::visit(art::Event& event)
     return;
   }
 
-  if (m_digitize) { save_as_raw(event); }
-  else {
-    save_as_cooked(event);
-  }
+  if (m_digitize && !m_skipframe) { save_as_raw(event); }
+  else if (!m_digitize && !m_skipframe) { save_as_cooked(event); }
 
   save_summaries(event);
 
