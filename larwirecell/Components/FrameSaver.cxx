@@ -539,7 +539,9 @@ void FrameSaver::visit(art::Event& event)
   }
 
   if (m_digitize && !m_skipframe) { save_as_raw(event); }
-  else if (!m_digitize && !m_skipframe) { save_as_cooked(event); }
+  else if (!m_digitize && !m_skipframe) {
+    save_as_cooked(event);
+  }
 
   save_summaries(event);
 
