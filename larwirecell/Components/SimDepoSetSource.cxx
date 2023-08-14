@@ -16,7 +16,7 @@
 #include "WireCellUtil/String.h"
 #include "WireCellUtil/Units.h"
 
-#include "SedDumper.h"          // for debug
+#include "DebugDumper.h"          // for debug
 
 WIRECELL_FACTORY(wclsSimDepoSetSource,
                  wcls::SimDepoSetSource,
@@ -180,6 +180,7 @@ void SimDepoSetSource::visit(art::Event& event)
     std::cerr << msg << std::endl;
     THROW(WireCell::RuntimeError() << WireCell::errmsg{msg});
   }
+
   sed_dumper(event, m_inputTag.label(), m_debug_file, "SimDepoSetSource ");
 
   const size_t ndepos = sedvh->size();
@@ -282,6 +283,7 @@ bool SimDepoSetSource::operator()(WireCell::IDepoSet::pointer& out)
 {
   if (m_depos.empty()) { return false; }
 
+  depo_dumper(m_depos, m_inputTag.label(), m_debug_file, "SimDepoSetSource ");
   out = std::make_shared<SimpleDepoSet>(m_count, m_depos);
   m_depos.clear();
   ++m_count;

@@ -16,7 +16,7 @@
 #include "lardataobj/Simulation/SimChannel.h"
 #include "lardataobj/Simulation/SimEnergyDeposit.h"
 
-#include "SedDumper.h"          // for debug
+#include "DebugDumper.h"          // for debug
 
 WIRECELL_FACTORY(wclsDepoFluxWriter,
                  wcls::DepoFluxWriter,
@@ -166,8 +166,8 @@ void DepoFluxWriter::visit(art::Event& event)
             std::cerr << msg << std::endl;
             THROW(WireCell::RuntimeError() << WireCell::errmsg{msg});
         }
-
         sed_dumper(event, m_sed_label, m_debug_file, "DepoFluxWriter ");
+        depo_dumper(m_depos, m_simchan_label, m_debug_file, "DepoFluxWriter ");
     }
 
     std::map<unsigned int, sim::SimChannel> simchans;
