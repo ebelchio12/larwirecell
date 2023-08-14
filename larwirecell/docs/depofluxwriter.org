@@ -140,7 +140,14 @@ The data is dumped only if ~sed_label~ is set on ~DepoFluxWriter~ and
 ~id_is_track~ is true in ~SimDepoSetSource~.
 
 
+* Tests
 
+In a suitable environment (see for example [[https://github.com/WireCell/wire-cell-containers][wire-cell-containers]])
+
+#+begin_example
+bats mrb/srcs/larwirecell/larwirecell/tests/test_depofluxwriter.bats 
+test_depofluxwriter.bats
+#+end_example
 
 * Obsolete
 

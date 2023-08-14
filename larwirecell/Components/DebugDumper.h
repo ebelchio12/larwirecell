@@ -4,6 +4,7 @@
 #include "lardataobj/Simulation/SimEnergyDeposit.h"
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 // Get SimEnergyDeposit at label from event and dump to filename.
 inline void sed_dumper(const art::Event& event,
@@ -37,7 +38,23 @@ inline void sed_dumper(const art::Event& event,
     }
 }
 
-inline void depo_dumper(const WireCell::IDepo::vector& depos,
+
+inline int depoid(const WireCell::IDepo::pointer& depo)
+{
+    auto p = depo->prior();
+    if (p) {
+        return p->id();
+    }
+    return depo->id();
+}
+
+inline bool idorder(const WireCell::IDepo::pointer& a, const WireCell::IDepo::pointer& b)
+{
+    return depoid(a) < depoid(b);
+}
+
+
+inline void depo_dumper(WireCell::IDepo::vector depos,
                         const std::string& label,
                         const std::string& filename,
                         const std::string& prefix="")
@@ -45,6 +62,8 @@ inline void depo_dumper(const WireCell::IDepo::vector& depos,
     if (label.empty() or filename.empty()) {
         return;
     }
+
+    std::sort(depos.begin(), depos.end(), idorder);
 
     auto ndepos = depos.size();
     std::fstream fstr(filename, std::fstream::out | std::fstream::app);
@@ -65,6 +84,7 @@ inline void depo_dumper(const WireCell::IDepo::vector& depos,
                  << " " << ind
                  << " " << ndepos
                  << " " << index
+                 << " " << depoid(depo)
                  << " " << depo->id() << " " << depo->pdg()
                  << " " << depo->charge() << " " << depo->energy()
                  << " " << depo->time()
