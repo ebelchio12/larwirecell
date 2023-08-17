@@ -1,24 +1,26 @@
 #+title: DepoFluxWriter
-#+subtitle: Converting Drifted Depos to SimChannels
+#+subtitle: Converting Drifted Depos to SimChannel IDEs
+#+LATEX_HEADER: \usepackage[margin=1.0in]{geometry}
+#+options: ':t
 
 * Overview
 
 The ~DepoFluxWriter~ converts a WCT ~IDepoSet~ received from a WCT flow
-graph edge to a ~vector~ of ~SimChannel~ and writes it to the ~art::Event~.
+graph edge to ~IDE~ in a ~vector~ of ~SimChannel~ which then is written to
+the ~art::Event~.
 
 Note, ~DepoFluxWriter~ supersedes ~DepoSetSimChannelSink~ and
-~SimChannelSink~ both of which are now obsolete, somewhat broken and
-should no longer be used.  They may be removed in the future.  See the
-end of this document for information on migrating your configuration
-to ~DepoFluxWriter~.
+~SimChannelSink~ both of which should be considered obsolete.  They may
+be removed in the future.  See the end of this document for
+information on migrating your configuration to ~DepoFluxWriter~.
 
 * Interpreting the output
 
-Each ~SimChannel~ produced by ~DepoFluxWriter~ represents a subset of the
-"true" flux of ionization electrons through a particular *measurement
-plane* (MP) that is perpendicular to the nominal drift direction.  The
-MP is identified with the *collection plane* (CP) by default (but see
-below).
+Each ~SimChannel~ ~IDE~ produced by ~DepoFluxWriter~ represents a subset of
+the "true" flux of ionization electrons through a particular
+*measurement plane* (MP) that is perpendicular to the nominal drift
+direction.  The MP is identified with the *collection plane* (CP) by
+default (but see below).
 
 At the MP, the flux of electrons is binned in drift time and spatially
 in the MP.  In time, the flux is integrated over small sample periods
@@ -30,8 +32,12 @@ extend on either side of its center line by one half pitch.
 In practice, each input depo is assumed to be the result of applying
 the WCT ~Drifter~ to a depo that was originally produced from a
 ~SimEnergyDeposit~.  The ~SimEnergyDeposit~ represents a small step of an
-ionizing track, typically made by Geant4.  The ~SimChannel~ output of
-~DepoFluxWriter~ is populated by a collection of ~sim::IDE~.
+ionizing track, typically made by Geant4.  The ~Drifter~ transports
+input depos to a *response plane* (RP).  In the full WCT simulation, the
+pile up of depos at the RP become input to the detector response
+simulation (~DepoTransform~).  They may also be sent in to a
+~DepoFluxWriter~.  The ~DepoFluxWriter~ further transports them to the MP
+and writes them out as collections of ~SimChannel~ ~IDE~.
 
 * Nominal time
 
@@ -64,7 +70,7 @@ that is introduced upstream of ~DepoFluxWriter~.
 
 For example, if Geant4 is given an "event start time" of T0 and
 assuming interaction and tracking times are neglected, one may pick a
-window starting from T0 and has a duration of one maximum drift time.
+window starting from T0 with a duration of one maximum drift time.
 This will exactly capture depos in the drift volume.
 
 The acceptance window is configured using:
@@ -116,14 +122,17 @@ When this label is set, then ~DepoFluxWriter~ will assume the
 given by ~sed_label~.  It will retrieve the ~SimEnergyDeposit~ at that
 index and pass both the ~trackID~ and ~origTrackID~ to the ~TrackIDE~.
 
-Note, this requires *collusion* with the creator of the original ~IDepo~
-set that was sent through WCT ~Drifter~ and then on to ~DepoFluxWriter~.
-This creator is typically ~SimDepoSetSource~ and it has an option:
+Note, this requires *collusion* with the creator of the original
+~IDepoSet~ that was sent through WCT ~Drifter~, the drifted version of
+which is given to the ~DepoFluxWriter~.  That is the ~prior()~ of each
+~IDepo~ input to the ~DepoFluxWriter~ must be propertly produced.  One
+creator that knows how to collude is ~SimDepoSetSource~ and it does so
+with this option:
 
-- ~id_is_track~ :: If *false*, ~IDepo::id()~ stores index into
-  ~SimEnergyDeposit~ vector element from which the ~IDepo~ was made. If
-  *true* the ~IDepo::id()~ stores the ~SimEnergyDeposit::TrackID()~.
-  Default is *true*.
+- ~id_is_track~ :: If *false*, ~IDepo::id()~ stores an *index* into
+  ~SimEnergyDeposit~ vector to the element from which the ~IDepo~ was
+  made.  If *true* the ~IDepo::id()~ stores the
+  ~SimEnergyDeposit::TrackID()~ as historically done.  Default is *true*.
 
 ** Expert debugging
 
@@ -146,7 +155,15 @@ In a suitable environment (see for example [[https://github.com/WireCell/wire-ce
 
 #+begin_example
 bats mrb/srcs/larwirecell/larwirecell/tests/test_depofluxwriter.bats 
-test_depofluxwriter.bats
+#+end_example
+
+The test produces some resultf files which are deleted by ~bats~ by
+default.  To save them run like:
+
+#+begin_example
+WCT_BATS_TMPDIR=$(pwd)/tmp \
+bats mrb/srcs/larwirecell/larwirecell/tests/test_depofluxwriter.bats 
+ls -l tmp/*.{root,pdf}
 #+end_example
 
 * Obsolete
@@ -155,7 +172,7 @@ The ~SimChannelSink~ and ~DepoSetSimChannelSink~ are obsolete, may give
 wrong results and should not be used.  This section gives a guide on
 how to transition their configuration to that of ~DepoFluxWriter~.
 
-- ~g4_ref_time~ :: consider setting ~reference_time.~
+- ~g4_ref_time~ :: consider ~reference_time~.
 - ~*_time_offset~ :: supply ~time_offsets~ array.
 - ~*_to_rp~ :: these option are not available though ~time_offset_{u,v,w}~
   can be used.  The distance from CP to RP is provided by the
