@@ -16,7 +16,7 @@
 #include "WireCellUtil/String.h"
 #include "WireCellUtil/Units.h"
 
-#include "DebugDumper.h"          // for debug
+#include "DebugDumper.h" // for debug
 
 WIRECELL_FACTORY(wclsSimDepoSetSource,
                  wcls::SimDepoSetSource,
@@ -224,9 +224,7 @@ void SimDepoSetSource::visit(art::Event& event)
     double wt = sed.Time() * units::ns;
     double wq = (*m_adapter)(sed);
     int wid = ind;
-    if (m_id_is_track) {
-      wid = sed.TrackID();
-    }
+    if (m_id_is_track) { wid = sed.TrackID(); }
     int pdg = sed.PdgCode();
     double we = sed.Energy() * units::MeV;
 
@@ -246,9 +244,7 @@ void SimDepoSetSource::visit(art::Event& event)
       double wt1 = sed1.Time() * units::ns;
       double wq1 = (*m_adapter)(sed1);
       int wid1 = ind;
-      if (m_id_is_track) {
-        wid1 = sed1.TrackID();
-      }
+      if (m_id_is_track) { wid1 = sed1.TrackID(); }
       int pdg1 = sed1.PdgCode();
       double we1 = sed1.Energy() * units::MeV;
 
@@ -290,8 +286,6 @@ bool SimDepoSetSource::operator()(WireCell::IDepoSet::pointer& out)
 
   return true;
 }
-
-
 
 // Local Variables:
 // mode: c++
