@@ -10,6 +10,7 @@
 
 #include "WireCellIface/IConfigurable.h"
 #include "WireCellIface/IFrameSource.h"
+#include "WireCellUtil/Logging.h"
 #include "larwirecell/Interfaces/IArtEventVisitor.h"
 
 #include "canvas/Utilities/InputTag.h"
@@ -42,6 +43,16 @@ namespace wcls {
     double m_tick;
     int m_nticks;
     std::vector<std::string> m_frame_tags;
+    art::InputTag m_wiener_inputTag;
+    art::InputTag m_gauss_inputTag;
+    std::vector<art::InputTag> m_badmasks_inputTag;
+    art::InputTag m_threshold_inputTag;
+    bool m_cmm_setup{false}; // true means use cmm setup
+    std::string m_wiener_tag{"wiener"};
+    std::string m_gauss_tag{"gauss"};
+    std::string m_cmm_tag; // for now use a single tag for output cmm
+
+    WireCell::Log::logptr_t l;
   };
 
 }
