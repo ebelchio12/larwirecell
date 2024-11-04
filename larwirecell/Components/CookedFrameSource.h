@@ -18,6 +18,9 @@
 #include <deque>
 #include <string>
 #include <vector>
+#include <iostream> // added Ewerton 2024-02-29 (deleteme later)
+#include <fstream> // added Ewerton 2024-02-29 (deleteme later)  
+
 
 namespace wcls {
   class CookedFrameSource : public IArtEventVisitor,
@@ -51,8 +54,10 @@ namespace wcls {
     std::string m_wiener_tag{"wiener"};
     std::string m_gauss_tag{"gauss"};
     std::string m_cmm_tag; // for now use a single tag for output cmm
-
+    double m_scale; // scale up input recob::Wire by this factor
+    unsigned int m_debug_channel; // <= debug purposes. Deleteme later.
     WireCell::Log::logptr_t l;
+    std::ofstream outfile {"output-CoookedFrameSource-thresholds.txt"};// added Ewerton 2024-02-29
   };
 
 }
